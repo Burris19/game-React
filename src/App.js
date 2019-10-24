@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-
+import $ from 'jquery'
 class App extends Component {
 
 
@@ -54,14 +54,28 @@ class App extends Component {
     })
   }
 
+
+
   render() {
     return (
-      <div className="container">
-        {this._renderMap()}
-      </div>
+      <>
+        <img
+          style={{
+            position: 'absolute'
+          }}
+          id="gamer"
+          width="100"
+          src="/images/man.jpg"
+          alt="Man"
+        />
+        <div className="container">
+          {this._renderMap()}
+        </div>
+      </>
     )
   }
-}
+  //document.getElementById('gamer').style.top = 150+'px';
 
+}
 
 export default App;
