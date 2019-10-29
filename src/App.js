@@ -139,7 +139,6 @@ class App extends Component {
     const question = abailableQuestions[index]
 
     const newQuestions = questions.map(element => {
-      console.log(element.question === question.question)
       if (element.question === question.question) {
         element.used = true
         return element
