@@ -2,93 +2,25 @@ import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import './App.css';
+import { QuestionFile } from './config/questions'
+import { Way } from './config/way'
+import RenderModalRandomNumber from './components/modal/modal-random-number'
+
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      questions: QuestionFile,
       currentQuestion: '',
       currentAnswers: [],
-      showModal: false,
+      showModalRandomNumber: false,
+      showModalQuestion: false,
+      currentPossition: 1,
+      totalPossition: 32,
+      randomNumber: 0,
       possitionLeft: 0,
       possitionTop: 0,
-      way: [
-        {
-          idElement: 'one-5',
-          question: 'Que es React',
-          used: false,
-          answers: [
-            {
-              id: 1,
-              answer: 'one'
-            },
-            {
-              id: 2,
-              answer: 'two'
-            },
-            {
-              id: 3,
-              answer: 'three'
-            }
-          ]
-        },
-        {
-          idElement: 'one-9',
-          question: 'Que es HTLM',
-          used: false,
-          answers: [
-            {
-              id: 1,
-              answer: 'one'
-            },
-            {
-              id: 2,
-              answer: 'two'
-            },
-            {
-              id: 3,
-              answer: 'three'
-            }
-          ]
-        },
-        {
-          idElement: 'five-9',
-          question: 'Que es JSX',
-          used: false,
-          answers: [
-            {
-              id: 1,
-              answer: 'one'
-            },
-            {
-              id: 2,
-              answer: 'two'
-            },
-            {
-              id: 3,
-              answer: 'three'
-            }
-          ]
-        },
-        {
-          idElement: 'nine-9',
-          question: 'Que es CSS3',
-          used: false,
-          answers: [
-            {
-              id: 1,
-              answer: 'one'
-            },
-            {
-              id: 2,
-              answer: 'two'
-            },
-            {
-              id: 3,
-              answer: 'three'
-            }
-          ]
-        }
-      ]
+      way: Way
     }
   }
 
@@ -106,7 +38,7 @@ class App extends Component {
     }
   }
 
-  _renderDivs = (alias, type) => {
+  _renderColums = (alias, type) => {
     const elements = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     return elements.map((element, index) => {
       return (
@@ -150,57 +82,39 @@ class App extends Component {
       const type = row === 'one' || row === 'nine' ? 'row' : 'colum'
       return (
         <div key={index} className="row justify-content-center">
-          {this._renderDivs(row, type)}
+          {this._renderColums(row, type)}
         </div>
       )
     })
   }
 
   _startGame = () => {
-    this._nextQuestion()
+    this.randomNumer()
   }
 
-  _nextQuestion = () => {
-    const { way } = this.state;
-    const nexElement = way.find(({ used }) => used === false);
+  randomNumer = () => {
+    const number = Math.floor((Math.random() * 6) + 1);
+    this.setState({
+      showModalRandomNumber: true,
+      randomNumber: number
+    })
+  }
 
-    if (nexElement) {
-      const currentId = nexElement.idElement
-      const question = nexElement.question
-      const answers = nexElement.answers
-      const coordinates = this._getCoordinates(currentId)
-      const newWay = way.map(element => {
-        if (element.idElement === currentId) {
-          element.used = true
-          return element
-        }
-        return element
-      })
+  _nextQuestion = (idElement, nextPossition) => {
+    const coordinates = this._getCoordinates(idElement)
+    this.setState({
+      ...coordinates
+    })
+    setTimeout(() => {
       this.setState({
-        way: newWay,
-        currentAnswers: answers,
-        currentQuestion: question,
-        ...coordinates
+        currentPossition: nextPossition,
+        showModalQuestion: true,
       })
-
-      setTimeout(() => {
-        this.setState({
-          showModal: true,
-        })
-      }, 1000)
-    }
+    }, 1000)
   }
 
-  _closeModal = () => {
-    this.setState({ showModal: false });
-  }
-
-  _handlerSubmit = () => {
-
-  }
-
-  _handlerChange = () => {
-
+  _closeModalQuestion = () => {
+    this.setState({ showModalQuestion: false });
   }
 
   _renderAnswers = (currentAnswers) => {
@@ -216,15 +130,39 @@ class App extends Component {
     })
   }
 
-  _renderModal = () => {
+  _getNewQuestion = () => {
+    const { questions } = this.state;
+    const abailableQuestions = questions.filter(({ used }) => used === false);
+    const abailableLength = abailableQuestions.length;
+    const nextQuestion = Math.floor((Math.random() * abailableLength) + 1);
+    const index = nextQuestion - 1;
+    const question = abailableQuestions[index]
+
+    const newQuestions = questions.map(element => {
+      console.log(element.question === question.question)
+      if (element.question === question.question) {
+        element.used = true
+        return element
+      }
+      return element
+    })
+
+
+    this.setState({
+      currentQuestion: question.question,
+      currentAnswers: question.answers,
+      question: newQuestions
+    })
+  }
+
+  _renderModalQuestion = () => {
     const {
-      showModal,
+      showModalQuestion,
       currentQuestion,
       currentAnswers
     } = this.state
     return (
-
-      <Modal show={showModal} onHide={this._closeModal}>
+      <Modal show={showModalQuestion} onHide={this._closeModalQuestion}>
         <form onSubmit={this._handlerSubmit}>
           <Modal.Header closeButton>
             <Modal.Title>Responde la siguiente pregunta</Modal.Title>
@@ -240,25 +178,61 @@ class App extends Component {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={this._closeModal}>Validar</Button>
+            <Button onClick={this._closeModalQuestion}>Validar</Button>
           </Modal.Footer>
         </form >
       </Modal >
     )
   }
 
+  _closeModalRandonNumber = () => {
+    this.setState({
+      showModalRandomNumber: false
+    })
+
+    const {
+      currentPossition,
+      totalPossition,
+      randomNumber,
+      way
+    } = this.state
+
+    const calcuteNextPossition = currentPossition + randomNumber
+
+    if (calcuteNextPossition >= totalPossition) {
+      //fin del juego
+    } else {
+      this._getNewQuestion()
+      const nexElement = way.find(({ number }) => parseInt(number) === calcuteNextPossition);
+      setTimeout(() => {
+        this._nextQuestion(nexElement.idElement, calcuteNextPossition)
+      }, 1000)
+    }
+
+  }
+
   render() {
     const {
       possitionLeft,
       possitionTop,
+      showModalRandomNumber
     } = this.state
     return (
       <>
-        {this._renderModal()}
+        {
+          showModalRandomNumber ?
+            <RenderModalRandomNumber
+              closeModalRandonNumber={this._closeModalRandonNumber}
+              {...this.state} /> :
+            null
+        }
+        {
+          this._renderModalQuestion()
+        }
         <img
           id="gamer"
           src="/images/man.jpg"
-          alt=""
+          alt="Jugador"
           width="100"
           height="75"
           style={{
@@ -271,7 +245,7 @@ class App extends Component {
         <div className="container">
           <div className="card">
             <div className="card-header">
-              <h1>Juego Monopolio <span className="badge badge-secondary">Mariano Galvez</span></h1>
+              <h1>Juego Camino y Preguntas <span className="badge badge-secondary">Mariano Galvez</span></h1>
               <button onClick={this._startGame} className="btn btn-primary">Jugar</button>
             </div>
             <div className="card-body">
