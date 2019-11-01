@@ -10,6 +10,10 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      currentSolution: 0,
+      selectedAnswer: '',
+      goodAnswers: 0,
+      badAnswers: 0,
       questions: QuestionFile,
       currentQuestion: '',
       currentAnswers: [],
@@ -45,8 +49,7 @@ class App extends Component {
         <div
           className={`col-1`}
           key={index}
-          id={`${alias}-${element}`}
-          style={{ 'background': 'red' }}>
+          id={`${alias}-${element}`}>
           {this._renderImage(type, index)}
         </div>
       )
@@ -67,7 +70,7 @@ class App extends Component {
       if (allowIndex.includes(index)) {
         return (
           <img
-            src="/images/way.jpg"
+            src="/images/cam.jpg"
             alt="Smiley face"
             width="100"
             height="75" />
@@ -108,6 +111,7 @@ class App extends Component {
     setTimeout(() => {
       this.setState({
         currentPossition: nextPossition,
+        selectedAnswer: 0,
         showModalQuestion: true,
       })
     }, 1000)
@@ -117,11 +121,26 @@ class App extends Component {
     this.setState({ showModalQuestion: false });
   }
 
+  _handlerChange = (e) => {
+    const { id, value } = e.target;
+
+    this.setState({
+      [id]: parseInt(value)
+    });
+
+  }
+
   _renderAnswers = (currentAnswers) => {
     return currentAnswers.map((answer, index) => {
       return (
         <div className="form-check" key={index}>
-          <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" />
+          <input
+            onChange={this._handlerChange}
+            className="form-check-input"
+            type="radio"
+            name="selectedAnswer"
+            id="selectedAnswer"
+            value={answer.id} />
           <label className="form-check-label" htmlFor="exampleRadios1">
             {answer.answer}
           </label>
@@ -148,10 +167,34 @@ class App extends Component {
 
 
     this.setState({
+      currentSolution: question.solution,
       currentQuestion: question.question,
       currentAnswers: question.answers,
       question: newQuestions
     })
+  }
+
+  _validateQuestion = () => {
+    const {
+      currentSolution,
+      selectedAnswer,
+      goodAnswers,
+      badAnswers,
+    } = this.state
+
+    if (currentSolution === selectedAnswer) {
+      const addGoodAnswer = goodAnswers + 1;
+      this.setState({
+        goodAnswers: addGoodAnswer
+      })
+    } else {
+      const addBadAnswers = badAnswers + 1;
+      this.setState({
+        badAnswers: addBadAnswers
+      })
+    }
+
+    this._closeModalQuestion()
   }
 
   _renderModalQuestion = () => {
@@ -177,7 +220,7 @@ class App extends Component {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={this._closeModalQuestion}>Validar</Button>
+            <Button onClick={this._validateQuestion}>Validar</Button>
           </Modal.Footer>
         </form >
       </Modal >
@@ -230,7 +273,7 @@ class App extends Component {
         }
         <img
           id="gamer"
-          src="/images/man.jpg"
+          src="/images/gif.gif"
           alt="Jugador"
           width="100"
           height="75"
@@ -247,7 +290,17 @@ class App extends Component {
               <h1>Juego Camino y Preguntas <span className="badge badge-secondary">Mariano Galvez</span></h1>
               <button onClick={this._startGame} className="btn btn-primary">Jugar</button>
             </div>
-            <div className="card-body">
+            <div className="card-body" style={{
+              backgroundImage: 'url(/images/degradado.jpg)'
+            }}>
+              <div className="row">
+                <div className="alert alert-success" role="alert">
+                  Numero de Aciertos: <strong>{this.state.goodAnswers}</strong>
+                </div>
+                <div className="alert alert-danger" role="alert" style={{ marginLeft: '10px' }}>
+                  Numero de Errores: <strong>{this.state.badAnswers}</strong>
+                </div>
+              </div>
               {this._renderMap()}
             </div>
           </div>

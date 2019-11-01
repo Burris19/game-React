@@ -46,7 +46,7 @@ class RenderModalRandomNumber extends Component {
                                 </div> :
                                 <div className="text-center">
                                     <img
-                                        src="/images/dado_gif.gif"
+                                        src="/images/dado.gif"
                                         alt="Jugador"
                                     />
                                 </div>
