@@ -53,7 +53,11 @@ class RenderModalRandomNumber extends Component {
                         }
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={closeModalRandonNumber}>Sigue Jugando</Button>
+                        {
+                            showNumber ?
+                                <Button onClick={closeModalRandonNumber}>Sigue Jugando</Button> :
+                                null
+                        }
                     </Modal.Footer>
                 </form >
             </Modal >
