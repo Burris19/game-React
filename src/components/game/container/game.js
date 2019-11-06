@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 import { USER_CONNECTED, UPDATE_USER, USER_DISCONNETED } from '../../../Events';
 import Monopoli from './monopoli.js'
 import { createUser } from '../../../Factories'
-const socketUrl = "http://34.216.159.130:3231"
+const socketUrl = "http://34.216.159.130:3231/"
 
 export class Game extends Component {
     constructor(props) {

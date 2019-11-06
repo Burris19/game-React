@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import io from 'socket.io-client'
 
 import TableRankingUsers from '../../game/presentation/tableRankingUsers'
-const socketUrl = "http://34.216.159.130:3231"
+const socketUrl = "http://34.216.159.130:3231/"
 
 class Ranking extends Component {
     constructor(props) {
