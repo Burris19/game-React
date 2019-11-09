@@ -57,38 +57,45 @@ const LayoutMonopoli = (props) => {
     return (
         <div className="card">
             <div className="card-header">
-                <h1>Juego Camino y Preguntas <span className="badge badge-secondary">Mariano Galvez</span></h1>
-                <h3>Bienvenido<span className="badge badge-secondary">{props.user.userName}</span></h3>
-                <button
-                    onClick={props._exitOfTheGame}
-                    className="btn btn-danger"
-                    style={{ marginLeft: '5px' }}>Salir del Juego</button>
+
+                <h1>Juego Camino y Preguntas <span className="badge badge-danger">Mariano Galvez</span></h1>
+                <h3>Bienvenido<span className="badge badge-success" style={{ marginLeft: '15px' }}>{props.user.userName}</span></h3>
+
                 <button
                     onClick={props._openModalRankingTable}
                     className="btn btn-warning"
-                    style={{ marginLeft: '5px' }}>Ver tabla de Posiciones</button>
+
+                >Ver tabla de Posiciones</button>
+
                 <button
                     onClick={props._startGame}
                     className="btn btn-primary"
-                    style={{ marginLeft: '5px' }}>Tirar dados</button>
+                    style={{ marginLeft: '10px' }}>Tirar dados</button>
 
-            </div>
+                <button
+                    onClick={props._exitOfTheGame}
+                    className="btn btn-danger"
+                    style={{ float: 'right', marginRight: '20px' }}>Salir</button>
+
+
+
+            </div >
             <div className="card-body" style={{
-                backgroundImage: 'url(/images/degradado.jpg)'
+                backgroundImage: 'url(/images/8.jpg)'
             }}>
                 <div className="row">
                     <div className="alert alert-success" role="alert">
-                        Numero de Aciertos: <strong>{props.user.goodQuestions}</strong>
+                        Aciertos: <strong>{props.user.goodQuestions}</strong>
                     </div>
                     <div className="alert alert-danger" role="alert" style={{ marginLeft: '10px' }}>
-                        Numero de Errores: <strong>{props.user.badQuestions}</strong>
+                        Errores: <strong>{props.user.badQuestions}</strong>
                     </div>
                 </div>
                 {
                     _renderMap()
                 }
             </div>
-        </div>
+        </div >
     )
 }
 

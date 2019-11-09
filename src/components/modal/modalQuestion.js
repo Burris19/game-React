@@ -27,20 +27,37 @@ const ModalQuestions = (props) => {
         <Modal show={props.showModalQuestion} onHide={props._closeModalQuestion}>
             <form>
                 <Modal.Header closeButton>
-                    <Modal.Title>Responde la siguiente pregunta</Modal.Title>
+                    <Modal.Title>{props.endGame ? '' : 'Responde la siguiente pregunta'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h3>{props.currentQuestion}?</h3>
-                    <div className="form-row">
-                        <div className="form-group col-md-12">
-                            {
-                                _renderAnswers(props.currentAnswers)
-                            }
-                        </div>
-                    </div>
+
+                    {
+
+                        props.endGame ?
+                            <h1>Fin del Juego</h1> :
+                            <>
+                                <h3>{props.currentQuestion}?</h3>
+                                <div className="form-row">
+                                    <div className="form-group col-md-12">
+                                        {
+                                            _renderAnswers(props.currentAnswers)
+                                        }
+                                    </div>
+                                </div>
+                            </>
+
+                    }
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={props._validateQuestion}>Validar</Button>
+                    {
+                        props.endGame ?
+                            <button
+                                onClick={props._exitOfTheGame}
+                                className="btn btn-danger"
+                                style={{ marginLeft: '5px' }}>Salir</button> :
+                            <Button onClick={props._validateQuestion}>Validar</Button>
+
+                    }
                 </Modal.Footer>
             </form >
         </Modal >

@@ -20,11 +20,12 @@ class Monopoli extends Component {
             showModalRankingTable: false,
             showModalQuestion: false,
             currentPossition: 1,
-            totalPossition: 32,
+            totalPossition: 31,
             randomNumber: 0,
             possitionLeft: 0,
             possitionTop: 0,
-            way: Way
+            way: Way,
+            endGame: false
         }
     }
 
@@ -93,10 +94,19 @@ class Monopoli extends Component {
             way
         } = this.state
 
-        const calcuteNextPossition = currentPossition + randomNumber
+        let calcuteNextPossition = currentPossition + randomNumber
 
         if (calcuteNextPossition >= totalPossition) {
-            //fin del juego
+            const coordinates = this._getCoordinates('two-1')
+            this.setState({
+                endGame: true,
+                ...coordinates
+            })
+            setTimeout(() => {
+                this.setState({
+                    showModalQuestion: true,
+                })
+            }, 1000)
         } else {
             this._getNewQuestion()
             const nexElement = way.find(({ number }) => parseInt(number) === calcuteNextPossition);
@@ -174,6 +184,7 @@ class Monopoli extends Component {
                     {...this.state}
                 />
                 <ModalQuestions
+                    _exitOfTheGame={this.props.deleteUser}
                     _handlerChange={this._handlerChange}
                     _closeModalQuestion={this._closeModalQuestion}
                     _validateQuestion={this._validateQuestion}
