@@ -42,7 +42,7 @@ class RenderModalRandomNumber extends Component {
                         {
                             showNumber ?
                                 <div className="text-center">
-                                    <h1 className="display-4">Tu numero es <strong>{randomNumber}</strong></h1>
+                                    <h1 className="display-4">Avanza <strong>{randomNumber}</strong> {randomNumber === 1 ? 'casilla' : 'casillas'}</h1>
                                 </div> :
                                 <div className="text-center">
                                     <img
